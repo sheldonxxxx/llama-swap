@@ -39,9 +39,10 @@ for arg in "$@"; do
             echo "  --no-cache  Force rebuild without using Docker cache"
             echo "  --help, -h  Show this help message"
             echo ""
-            echo "Environment variables:"
-            echo "  DOCKER_IMAGE_TAG     Set custom image tag (default: llama-swap:unified-cuda or llama-swap:unified-vulkan)"
-            echo "  LLAMA_REF            Pin llama.cpp to a commit, tag, or branch"
+echo "Environment variables:"
+             echo "  DOCKER_IMAGE_TAG     Set custom image tag (default: llama-swap:unified-cuda or llama-swap:unified-vulkan)"
+             echo "  LLAMA_REPO           llama.cpp git repo URL (default: https://github.com/ggml-org/llama.cpp.git)"
+             echo "  LLAMA_REF            Pin llama.cpp to a commit, tag, or branch"
             echo "  WHISPER_REF          Pin whisper.cpp to a commit, tag, or branch"
             echo "  SD_REF               Pin stable-diffusion.cpp to a commit, tag, or branch"
             echo "  IK_LLAMA_REF         Pin ik_llama.cpp to a commit, tag, or branch (CUDA only)"
@@ -60,8 +61,8 @@ fi
 
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG:-llama-swap:unified-${BACKEND}}"
 
-# Git repository URLs
-LLAMA_REPO="https://github.com/ggml-org/llama.cpp.git"
+# Git repository URLs (can be overridden via environment)
+LLAMA_REPO="${LLAMA_REPO:-https://github.com/ggml-org/llama.cpp.git}"
 WHISPER_REPO="https://github.com/ggml-org/whisper.cpp.git"
 SD_REPO="https://github.com/leejet/stable-diffusion.cpp.git"
 LLAMA_SWAP_REPO="https://github.com/mostlygeek/llama-swap.git"
@@ -196,6 +197,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 BUILD_ARGS=(
     --build-arg "BACKEND=${BACKEND}"
+    --build-arg "LLAMA_REPO_URL=${LLAMA_REPO}"
     --build-arg "LLAMA_COMMIT_HASH=${LLAMA_HASH}"
     --build-arg "WHISPER_COMMIT_HASH=${WHISPER_HASH}"
     --build-arg "SD_COMMIT_HASH=${SD_HASH}"

@@ -75,11 +75,12 @@ RUN --mount=type=cache,id=ccache-${BACKEND},target=/ccache \
 
 FROM builder-base AS llama-build
 ARG BACKEND=cuda
+ARG LLAMA_REPO_URL=https://github.com/ggml-org/llama.cpp.git
 ARG LLAMA_COMMIT_HASH=master
 COPY install-llama.sh /build/
 RUN --mount=type=cache,id=ccache-${BACKEND},target=/ccache \
     --mount=type=cache,id=llama-${BACKEND},target=/src/llama.cpp/build \
-    BACKEND=${BACKEND} bash /build/install-llama.sh "${LLAMA_COMMIT_HASH}"
+    LLAMA_REPO_URL=${LLAMA_REPO_URL} BACKEND=${BACKEND} bash /build/install-llama.sh "${LLAMA_COMMIT_HASH}"
 
 # ── Build ik_llama.cpp (CUDA only) ────────────────────────────────────
 #

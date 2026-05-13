@@ -5,16 +5,17 @@ set -e
 
 COMMIT_HASH="${1:-master}"
 BACKEND="${BACKEND:-cuda}"
+LLAMA_REPO_URL="${LLAMA_REPO_URL:-https://github.com/ggml-org/llama.cpp.git}"
 
 mkdir -p /install/bin
 
 # Clone and checkout (init-based so cache-mounted /src/llama.cpp/build dir doesn't break clone)
-echo "=== Cloning llama.cpp at ${COMMIT_HASH} ==="
+echo "=== Cloning llama.cpp at ${COMMIT_HASH} from ${LLAMA_REPO_URL} ==="
 mkdir -p /src/llama.cpp
 cd /src/llama.cpp
 if [ ! -d .git ]; then
     git init
-    git remote add origin https://github.com/ggml-org/llama.cpp.git
+    git remote add origin "${LLAMA_REPO_URL}"
 fi
 git fetch --depth=1 origin "${COMMIT_HASH}"
 git checkout FETCH_HEAD
